@@ -1,0 +1,34 @@
+#include <stdio.h>
+
+int mutex = 1, full = 0, empty = 3, x = 0;
+
+void producer() {
+    mutex--;
+    empty--;
+    x++;
+    printf("Produced item %d\n", x);
+    mutex++;
+    full++;
+}
+
+void consumer() {
+    mutex--;
+    full--;
+    printf("Consumed item %d\n", x);
+    x--;
+    mutex++;
+    empty++;
+}
+
+int main() {
+    int n;
+    while (1) {
+        printf("\n1.Produce 2.Consume 3.Exit\n");
+        scanf("%d", &n);
+        if (n == 1 && empty != 0) producer();
+        else if (n == 2 && full != 0) consumer();
+        else if (n == 3) break;
+        else printf("Buffer full or empty\n");
+    }
+    return 0;
+}
