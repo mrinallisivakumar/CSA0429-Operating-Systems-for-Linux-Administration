@@ -1,0 +1,50 @@
+#include <stdio.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <sys/stat.h>
+#include <dirent.h>
+
+int main() {
+    char filename[50], dirname[50];
+    int fd;
+    struct stat st;
+    DIR *dp;
+    struct dirent *de;
+
+    printf("Enter file name: ");
+    scanf("%s", filename);
+
+    fd = open(filename, O_RDONLY);
+    if (fd == -1) {
+        perror("File open failed");
+        return 1;
+    }
+
+    printf("File opened successfully\n");
+
+    printf("File flags: %d\n", fcntl(fd, F_GETFL));
+
+    lseek(fd, 0, SEEK_END);
+    printf("File pointer moved to end\n");
+
+    stat(filename, &st);
+    printf("File size: %ld bytes\n", st.st_size);
+
+    printf("\nEnter directory name: ");
+    scanf("%s", dirname);
+
+    dp = opendir(dirname);
+    if (dp == NULL) {
+        perror("Directory open failed");
+        return 1;
+    }
+
+    printf("\nDirectory contents:\n");
+    while ((de = readdir(dp)) != NULL) {
+        printf("%s\n", de->d_name);
+    }
+
+    close(fd);
+    closedir(dp);
+    return 0;
+}
