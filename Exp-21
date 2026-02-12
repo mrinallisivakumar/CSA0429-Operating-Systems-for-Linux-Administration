@@ -1,0 +1,49 @@
+#include <stdio.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <sys/stat.h>
+#include <dirent.h>
+
+int main() {
+    int fd;
+    struct stat st;
+    DIR *dp;
+    struct dirent *de;
+
+    printf("Program started\n");
+
+    fd = open("test.txt", O_RDONLY);
+    if (fd == -1) {
+        perror("File open failed");
+    } else {
+        printf("File opened successfully\n");
+    }
+
+    if (fd != -1) {
+        printf("File descriptor: %d\n", fd);
+
+        lseek(fd, 0, SEEK_END);
+        printf("File pointer moved to end\n");
+
+        if (stat("test.txt", &st) == 0) {
+            printf("File size: %ld bytes\n", st.st_size);
+        }
+    }
+
+    dp = opendir(".");
+    if (dp == NULL) {
+        perror("Directory open failed");
+        return 1;
+    }
+
+    printf("\nDirectory contents:\n");
+    while ((de = readdir(dp)) != NULL) {
+        printf("%s\n", de->d_name);
+    }
+
+    if (fd != -1)
+        close(fd);
+
+    closedir(dp);
+    return 0;
+}
