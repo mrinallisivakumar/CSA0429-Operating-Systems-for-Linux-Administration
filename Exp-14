@@ -1,0 +1,18 @@
+#include <stdio.h>
+
+int main() {
+    int i, start, length;
+
+    printf("Enter starting block: ");
+    scanf("%d", &start);
+
+    printf("Enter length of file: ");
+    scanf("%d", &length);
+
+    printf("\nBlocks allocated to the file are:\n");
+    for (i = start; i < start + length; i++) {
+        printf("Block %d\n", i);
+    }
+
+    return 0;
+}
